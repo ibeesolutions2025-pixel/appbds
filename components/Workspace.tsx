@@ -296,7 +296,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ selectedApp }) => {
         let finalClothingDesc = clothingStyle === 'custom' ? (customClothingText || 'Professional Attire') : '';
         if (!finalClothingDesc) {
            const opt = CLOTHING_OPTIONS.find(o => o.id === clothingStyle);
-           finalClothingDesc = opt ? opt.label : 'Professional Attire';
+           finalClothingDesc = opt ? (opt as any).prompt ?? opt.label : 'Professional Attire';
         }
 
         const generatedScenes = await generateRealEstateMaterials(selectedApp, portraitImage, projectImages, projectInfo, finalClothingDesc, finalSceneCount);
@@ -324,7 +324,7 @@ export const Workspace: React.FC<WorkspaceProps> = ({ selectedApp }) => {
         let finalOutfit = townhouseOutfit === 'custom' ? customTownhouseOutfit : '';
         if (!finalOutfit) {
            const opt = TOWNHOUSE_OUTFITS.find(o => o.id === townhouseOutfit);
-           finalOutfit = opt ? opt.label : 'Smart Casual';
+           finalOutfit = opt ? (opt as any).prompt ?? opt.label : 'Smart Casual';
         }
 
         // 1. Generate Scenes (Text)
