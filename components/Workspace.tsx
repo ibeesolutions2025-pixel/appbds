@@ -173,22 +173,22 @@ export const Workspace: React.FC<WorkspaceProps> = ({ selectedApp }) => {
 
   // NEW: Download Scripts Text
   const handleDownloadScripts = (items: any[], type: 'branding' | 'scene') => {
-    let content = "";
-    
-    // Add Hook and Hashtags for Branding
-    if (type === 'branding' && brandingResult) {
-       content += `HOOK: ${brandingResult.hookHeadline}\n`;
-       content += `HASHTAGS: ${brandingResult.hashtags.join(' ')}\n`;
-       content += "\n==================================================\n\n";
-    }
+    // Output format (1 line per scene):
+    // <English prompt> Lời thoại:"<script>"
+    // Each scene separated by 1 blank line.
+    const normalizeOneLine = (s: any) =>
+      String(s ?? '')
+        .replace(/\s*\n\s*/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 
-    items.forEach((item, index) => {
-        const idx = index + 1;
-        content += `Cảnh ${idx}: ${item.title || ''}\n\n`;
-        content += `Prompt Veo: ${item.veoPrompt || ''}\n\n`;
-        content += `Lời thoại: ${item.script}\n`;
-        content += "\n--------------------------------------------------\n\n";
+    const lines = items.map((item) => {
+      const prompt = normalizeOneLine(item?.veoPrompt);
+      const script = normalizeOneLine(item?.script);
+      return `${prompt} Lời thoại:"${script}"`;
     });
+
+    const content = lines.join("\n\n") + "\n";
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
